@@ -4,7 +4,8 @@
 # ------------------------
 
 # Imports
-import pygame, Config
+import pygame
+import Config, Share
 from Event import EventManager, EventListener
 from World import World
 from Player import Player

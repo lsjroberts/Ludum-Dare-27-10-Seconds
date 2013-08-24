@@ -18,10 +18,14 @@ pygame.init( )
 
 # Import app logic
 from app.App import App
+from app.Player import Player
 from app.Event import PygameEvent
 
 # Create app
 app.Config.app = App( )
+
+# Create player
+app.Config.player = Player( )
 
 # Setup the screen
 app.Config.screen = pygame.display.set_mode( [app.Config.screen_w, app.Config.screen_h] )
