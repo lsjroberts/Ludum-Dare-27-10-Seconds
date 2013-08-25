@@ -3,14 +3,16 @@
 # ---------------------------
 
 # General Information
-app_title = "Neon Spores"
+app_title = "10 Seconds To Midnight"
 fps = 60
 screen_w = 1024
 screen_h = 768
 
 # Sprite Layers
-sprite_layer_player = 1
-sprite_layer_terrain = 2
+sprite_layer_player = 4
+sprite_layer_computer = 3
+sprite_layer_buildings = 2
+sprite_layer_background = 1
 
 # World
 world_size = 4

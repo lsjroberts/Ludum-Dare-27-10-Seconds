@@ -5,7 +5,7 @@
 
 # Imports
 import pygame
-import Config, Share
+import Config
 from Event import EventManager, EventListener
 from World import World
 from Player import Player
@@ -56,27 +56,19 @@ class App( ):
     def LoadGame( self ):
         # Create the sprite groups and layers
         self.sprite_groups['player'] = pygame.sprite.Group( )
-        self.sprite_groups['player-lives'] = pygame.sprite.Group( )
-        self.sprite_groups['energy-particles'] = pygame.sprite.Group( )
-
-        self.sprite_groups['friendly-plants'] = pygame.sprite.Group( )
-        self.sprite_groups['friendly-spores'] = pygame.sprite.Group( )
-        self.sprite_groups['friendly-trees'] = pygame.sprite.Group( )
-
-        self.sprite_groups['enemy-flying'] = pygame.sprite.Group( )
-        self.sprite_groups['enemy-spores'] = pygame.sprite.Group( )
-        self.sprite_groups['enemy-trees'] = pygame.sprite.Group( )
+        self.sprite_groups['computer'] = pygame.sprite.Group( )
+        self.sprite_groups['buildings'] = pygame.sprite.Group( )
+        self.sprite_groups['background'] = pygame.sprite.Group( )
 
         self.sprites_all = pygame.sprite.LayeredUpdates( )
 
-        # Create the world
+        # Create the first world
         Config.world = World( )
-        Config.world.GenerateTerrain( Config.screen_w * Config.world_size )
 
         self.mode = "Game"
 
         # Create the player
-        p = Player( )
+        Config.player = Player( )
 
 
     # -- Unload Game --
@@ -117,17 +109,7 @@ class App( ):
     def TickGame( self, frame_time ):
 
         # Fill with black
-        Config.screen.fill( (0,0,0) )
-
-        # Get terrain
-        Config.screen.blit( Config.world.terrain, (Config.world_offset, 0) )
-
-        # Nav Map
-        Config.screen.blit( Config.world.terrain_minimap, (Config.screen_w - Config.world.terrain_minimap.get_width( ), 0) )
-        navmap = Config.world.NavMap( )
-
-        # Add map to screen
-        Config.screen.blit( navmap, (Config.screen_w - Config.world.terrain_minimap.get_width( ), 0))
+        Config.screen.fill( (0,127,127) )
 
         # Update sprites
         for s in self.sprites_all:
@@ -136,7 +118,7 @@ class App( ):
         # Draw sprites
         rects = self.sprites_all.draw( Config.screen )
 
-        #pygame.display.update( rects )
+        # pygame.display.update( rects )
 
         pygame.display.flip( )
 

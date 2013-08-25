@@ -12,24 +12,31 @@ folder = "sprites/"
 
 # -------- Sprite -------
 class Sprite( pygame.sprite.Sprite ):
-    collide_with = []
 
     # Init
     def __init__( self ):
+        self.colliders = []
         pygame.sprite.Sprite.__init__( self, self.groups )
 
     # Check collisions
     def CheckCollisions( self ):
-        for cw in self.collide_with:
-            collisions = pygame.sprite.spritecollide( self, cw['group'], False )
-            for c in collisions:
-                f = getattr( Event, cw['event'] )
-                self.OnCollision( c )
-                Config.app.em.Post( f( c ) )
+        for collider in self.colliders:
+            callback = getattr( self, collider['callback'] )
+            false_callback = getattr( self, collider['false_callback'] )
+            collisions = pygame.sprite.spritecollide( self, collider['group'], False )
 
-    # On Collision
-    def OnCollision( self, c ):
-        pass
+            if len( collisions ) == 0:
+                false_callback( )
+
+            else:
+                for c in collisions:
+                    ef = getattr( Event, collider['event'] )
+                    Config.app.em.Post( ef(c) )
+                    callback( c )
+
+    
+    def AddCollider( self, collider ):
+        self.colliders.append( collider )
 
 
     # Get Draw Pos
@@ -154,8 +161,6 @@ class AnimatedSprite( Sprite ):
             if self._frame < state['start']: self._frame = state['start']
             if self._frame > state['end']:   self._frame = state['start']
 
-            #if self._frame != frame:
-                # Update image
             self.image = self.images[self._frame]
             self._last_update = ticks
 
@@ -167,7 +172,6 @@ class AnimatedSprite( Sprite ):
     # Update
     def Update( self, frame_time, ticks ):
         self.UpdateAnimation( ticks )
-
         self.CheckCollisions( )
 
 
@@ -179,6 +183,7 @@ class MovingSprite( AnimatedSprite ):
     accl        = [20.0, 20.0] # Change per second
     dccl        = [10.0, 10.0]
     is_accl     = [0, 0]
+    move_vector = [0, 0]
 
     # Move
     def Move( self, frame_time ):
@@ -208,3 +213,16 @@ class MovingSprite( AnimatedSprite ):
     def Update( self, frame_time, ticks ):
         AnimatedSprite.Update( self, frame_time, ticks )
         self.Move( frame_time )
+
+
+class PhysicsSprite( MovingSprite ):
+    is_falling = True
+
+    def Update( self, frame_time, ticks ):
+        if self.is_falling == True:
+            self.is_accl[1] = 0.1
+        elif self.is_accl[1] > 0:
+            self.is_accl[1] = 0
+            self.cur_speed[1] = 0
+
+        MovingSprite.Update( self, frame_time, ticks )

@@ -30,6 +30,16 @@ class CollisionEvent( Event ):
     name = "Collision Event"
 
 
+# -------- PlayerBuildingCollisionEvent --------
+class PlayerBuildingCollisionEvent( CollisionEvent ):
+    name = "Player Building Collision Event"
+
+
+# -------- PlayerComputerCollisionEvent --------
+class PlayerComputerCollisionEvent( CollisionEvent ):
+    name = "Player Computer Collision Event"
+
+
 # -------- Event Listener --------
 # Superclass for any event listeners
 class EventListener( ):
